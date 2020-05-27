@@ -68,6 +68,11 @@
                                         context="{'default_type':'category'}"
                                     />
                                     <field
+                                        name="tag_id"
+                                        string="Tags"
+                                        widget="many2many_tags"
+                                    />
+                                    <field
                                         name="company_id"
                                         groups="base.group_multi_company"
                                     />
