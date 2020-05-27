@@ -34,6 +34,10 @@ class DocumentPage(models.Model):
         search="_search_content",
         required=True,
     )
+    tag_id = fields.Many2many('document.page.tags',
+                              column1='page_id',
+                              column2='tag_id',
+                              string='Tags')
 
     draft_name = fields.Char(
         string="Name",
@@ -181,3 +185,22 @@ class DocumentPage(models.Model):
         res = super().unlink()
         menus.unlink()
         return res
+
+
+class KnowledgeTag(models.Model):
+    _description = 'Knowledge Tags'
+    _name = 'document.page.tags'
+    _order = 'name'
+    _parent_store = True
+
+    name = fields.Char(string='Tag Name', required=True, translate=True)
+    color = fields.Integer(string='Color Index')
+    parent_id = fields.Many2one(
+        'document.page.tags', string='Parent Tag', index=True, ondelete='cascade')
+    child_ids = fields.One2many(
+        'document.page.tags', 'parent_id', string='Child Tags')
+    active = fields.Boolean(
+        default=True, help="The active field allows you to hide the category without removing it.")
+    parent_path = fields.Char(index=True)
+    partner_ids = fields.Many2many(
+        'document.page', column1='tag_id', column2='page_id', string='pages')
